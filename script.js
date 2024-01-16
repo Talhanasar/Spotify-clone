@@ -19,7 +19,7 @@ function getTime(seconds) {
 }
 
 async function getSongs() {
-  let a = await fetch('https://github.com/Talhanasar/Spotify-clone/tree/main/songs');
+  let a = await fetch('songs/');
   let response = await a.text();
   console.log(response);
   let div = document.createElement("div");
@@ -35,7 +35,7 @@ async function getSongs() {
 }
 
 const Playmusic=(track,pause = false)=>{
-  currentSong.src = "https://github.com/Talhanasar/Spotify-clone/tree/main/songs/"+track
+  currentSong.src = "songs/"+track
   if(!pause){
     currentSong.play();
     play.src = 'icon/pause.svg';
