@@ -8,7 +8,7 @@
 }
 
 .container {
-    height: 100vh;
+    height: var(--viewport-height);
 }
 
 .left {
