@@ -24,7 +24,7 @@
     margin: 10px 0;
     margin-right: 10px;
     position: relative;
-    max-height: 100vh;
+    max-height: var(--viewport-height);
     transition: all .5s;
 }
 
@@ -236,9 +236,8 @@
 }
 .info div{
     font-size: 0.5rem;
-    display: flex;
-    flex-wrap: wrap;
     max-width:calc(25vw - 155px);
+    word-break: break-all;
 }
 .play-now{
     display: flex;

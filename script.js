@@ -21,7 +21,6 @@ function getTime(seconds) {
 async function getSongs() {
   let a = await fetch('songs/');
   let response = await a.text();
-  console.log(response);
   let div = document.createElement("div");
   div.innerHTML = response;
   let as = div.getElementsByTagName('a');
@@ -150,6 +149,16 @@ async function main() {
     circle.style.transition = 'left 0.5s';
     seekbar.addEventListener('click',seekbar_click);
   });
+
+  // fixing mobile height problem
+  function setViewportHeight() {
+    document.documentElement.style.setProperty('--viewport-height', window.innerHeight + 'px');
+  }
+  // Initial setup
+  setViewportHeight();
+  // Update height on window resize
+  window.addEventListener('resize', setViewportHeight);
+  
   
 }
 main();
