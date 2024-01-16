@@ -1,8 +1,8 @@
 let currentSong = new Audio();
-let play = document.getElementById('play'); 
 let isDragging = false;
 let circle = document.querySelector('.circle');
 let seekbar = document.querySelector('.seekbar');
+let songs = [];
 
 function getTime(seconds) {
   if (isNaN(seconds) || seconds < 0) {
@@ -19,8 +19,9 @@ function getTime(seconds) {
 }
 
 async function getSongs() {
-  let a = await fetch('http://192.168.0.103:3000/songs/');
+  let a = await fetch('https://github.com/Talhanasar/Spotify-clone/tree/main/songs');
   let response = await a.text();
+  console.log(response);
   let div = document.createElement("div");
   div.innerHTML = response;
   let as = div.getElementsByTagName('a');
@@ -34,7 +35,7 @@ async function getSongs() {
 }
 
 const Playmusic=(track,pause = false)=>{
-  currentSong.src = "/songs/"+track
+  currentSong.src = "https://github.com/Talhanasar/Spotify-clone/tree/main/songs/"+track
   if(!pause){
     currentSong.play();
     play.src = 'icon/pause.svg';
@@ -45,7 +46,7 @@ const Playmusic=(track,pause = false)=>{
 
 async function main() {
   // get the list of all songs 
-  let songs = await getSongs();
+  songs = await getSongs();
   Playmusic(songs[0], true); 
   
 
@@ -73,7 +74,7 @@ async function main() {
     })
   });
 
-  // Attach EventListener to play previous song 
+  // Attach EventListener to change the pause and play icon 
   play.addEventListener('click',()=>{
       if(currentSong.paused){
         currentSong.play();
@@ -108,6 +109,23 @@ async function main() {
   document.querySelector('.cross').addEventListener('click',()=>{
     document.querySelector('.left').style.left = '-100%';
   })
+
+  // Adding eventlistener for previous button 
+  prev.addEventListener('click',()=>{
+    let index = songs.indexOf(currentSong.src.split('songs/')[1]);
+    if((index-1)>0){
+      Playmusic(songs[index-1]);
+    }
+  })
+
+  // Adding eventlistener for next button 
+  next.addEventListener('click',()=>{
+    let index = songs.indexOf(currentSong.src.split('songs/')[1]);
+    if((index+1)< songs.length){
+      Playmusic(songs[index+1]);
+    }
+  })
+
 
   // Adding effect to drag the circle 
   circle.addEventListener('mousedown', e=>{

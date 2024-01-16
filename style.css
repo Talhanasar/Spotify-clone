@@ -24,6 +24,7 @@
     margin: 10px 0;
     margin-right: 10px;
     position: relative;
+    max-height: 100vh;
     transition: all .5s;
 }
 
