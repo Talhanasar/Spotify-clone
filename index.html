@@ -86,29 +86,24 @@
             <div class="spotify-playlist">
                 <h1>Spotify Playlists</h1>
                 <div class="cardContainer">
-                    <div class="card">
-                        <div class="play">
-                                <svg width="70%" height="70%" viewBox="0 0 24 24" fill="060708" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M5 20V4L19 12L5 20Z" stroke="#060708" stroke-width="1.5" stroke-linejoin="round"/>
-                                </svg>                        
-                        </div>
-                        <img src="https://i.scdn.co/image/ab67706f00000002dd9acb211caf8703ea9bfc98" alt="">
-                        <h2>Bossa Nova Dinner</h2>
-                        <p>Soundtrack your cozy dinner with bossa nova jazz.</p>
-                    </div>
+                
                 </div>
             </div>
             <div class="playbar">
-                <div class="seekbar">
-                    <div class="circle"></div>
-                </div>
                 <div class="song-info disable-select"></div>
                 <div class="songbtns">
                     <img id="prev" class="invert disable-select" src="icon/pervsong.svg" alt="">
                     <img id="play" class="invert disable-select" src="icon/play.svg" alt="">
                     <img id="next" class="invert disable-select" src="icon/nextsong.svg" alt="">
                 </div>
-                <div class="song-time disable-select"></div>
+                <div class="time-vol" >
+                    <div class="song-time disable-select"></div>
+                    <div class="volume">
+                        <img src="icon/volume.svg" alt="">
+                        <input class="invert" type="range" name="volume" id="range">
+                    </div>
+                </div>
+                <input type="range" id="seekbar" min="0" max="100" value="0">
             </div>
         </div>
     </div>
