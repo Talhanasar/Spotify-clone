@@ -6,7 +6,7 @@ let singer;
 const username = 'Talhanasar';
 const repo = 'Songs';
 const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/`;
-const accessToken = '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';
+const accessToken = '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';
 let file_link = "https://raw.githubusercontent.com/Talhanasar/Songs/main/";
 
 function viewport() {
