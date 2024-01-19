@@ -2,7 +2,12 @@ let currentSong = new Audio();
 let seekbar = document.getElementById('seekbar');
 let songs = [];
 let currFolder;
-let singer = "Talha";
+let singer;
+const username = 'Talhanasar';
+const repo = 'Songs';
+const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/`;
+const accessToken = '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';
+let file_link = "https://raw.githubusercontent.com/Talhanasar/Songs/main/";
 
 function viewport() {
   document.documentElement.style.setProperty('--viewport-height', window.innerHeight + 'px');
@@ -32,7 +37,7 @@ function timeUpdate() {
 }
 
 const Playmusic = (track, pause = false) => {
-  currentSong.src = currFolder + track
+  currentSong.src = file_link +currFolder+ track;
   if (!pause) {
     currentSong.play();
     play.src = 'icon/pause.svg';
@@ -41,31 +46,38 @@ const Playmusic = (track, pause = false) => {
   }
   document.querySelector('.song-info').innerHTML = decodeURI(track);
   document.querySelector('.song-time').innerHTML = '00:00 / 00:00';
-  console.log(seekbar.value ,document.querySelector('.song-time').innerHTML )
 }
 
 async function getSongs(folder) {
   currFolder = folder;
-  let a = await fetch(folder);
-  let response = await a.text();
-  let div = document.createElement("div");
-  div.innerHTML = response;
-  let as = div.getElementsByTagName('a');
+  let a = await fetch(apiUrl+folder, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  let response = await a.json();
   songs = [];
-  for (const elem of as) {
-    if (elem.href.endsWith('.mp3')) {
-      songs.push(decodeURI(elem.href).split(folder)[1]);
+  for (const elem of response) {
+    if(elem.name.includes('.mp3')){
+      songs.push(elem.name);
     }
   }
 
-  // Adding songs to the playlist 
+  // Adding songs to the playlist
+  a = await fetch(`${file_link}${folder}info.json`);
+  response = await a.json();
+  if(response.artist != ""){
+    singer = response.artist;
+  }else{
+    singer = "Talha";
+  }
   let songul = document.querySelector('.song-list').getElementsByTagName('ul')[0];
   songul.innerHTML = '';
   for (const song of songs) {
     songul.innerHTML = songul.innerHTML + `<li>
       <img class="invert" src="icon/song.svg" alt="">
       <div class="info">
-          <div class="txt">${decodeURI(song)} </div>
+          <div class="txt">${song} </div>
           <div>${singer}</div>
       </div>
       <div class="play-now">
@@ -85,23 +97,22 @@ async function getSongs(folder) {
 
 
 async function displayAlbum() {
-  let a = await fetch("songs/");
-  let response = await a.text();
-  let div = document.createElement("div");
-  div.innerHTML = response;
-  let anchors = div.getElementsByTagName('a');
+  let a = await fetch(apiUrl,{
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  let response = await a.json();
   let cardContainer = document.querySelector('.cardContainer');
-  for (const elem of anchors) {
-    if (elem.href.includes('/songs') && !elem.href.includes(".htaccess")) {
-      let folder = elem.href.split('songs/')[1];
-      folder = folder.slice(0, folder.length - 1);
-
+  console.log(response);
+  for (const elem of response) {
+    if (elem.path.includes('songs/') && !elem.path.includes(".htaccess")) {
       // get the metadata of the folder
-      let a = await fetch(`songs/${folder}/info.json`);
+      let a = await fetch(`${file_link}songs/${elem.name}/info.json`);
       let response = await a.json();
-      cardContainer.innerHTML = cardContainer.innerHTML + ` <div data-folder=${folder} class="card">
+      cardContainer.innerHTML = cardContainer.innerHTML + ` <div data-folder=${elem.name} class="card">
       <div class="img">
-        <img src="/songs/${folder}/cover.jpeg" alt="">
+        <img src="${file_link}songs/${elem.name}/cover.jpeg" alt="">
         <div class="play">
                 <svg width="70%" height="70%" viewBox="0 0 24 24" fill="060708" xmlns="http://www.w3.org/2000/svg">
                   <path d="M5 20V4L19 12L5 20Z" stroke="#060708" stroke-width="1.5" stroke-linejoin="round"/>
@@ -113,16 +124,13 @@ async function displayAlbum() {
         <p>${response.description}.</p>
       </div>
     </div>`;
-      if (response.artist != '') {
-        singer = response.artist;
-      }
     }
   }
 }
 
 async function main() {
   // get the list of all songs
-  await getSongs("songs/Arjith Singh/");
+  await getSongs("Arjith Singh/");
   Playmusic(songs[0], true);
 
   // Display all the albums
@@ -186,6 +194,7 @@ async function main() {
   // Load the playlist whenever the Album is clicked
   Array.from(document.getElementsByClassName('card')).forEach( element => {
     element.addEventListener('click', async item => {
+      console.log(item.currentTarget);
       await getSongs(`songs/${decodeURI(item.currentTarget.dataset.folder)}/`);
       Playmusic(songs[0]);
     })
